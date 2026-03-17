@@ -1,0 +1,9 @@
+{
+  "name": "simple-node-app",
+  "version": "1.0.0",
+  "description": "A simple Node.js app that prints content on the screen",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  }
+}

@@ -1,0 +1,12 @@
+variable "region" {
+  default = "ap-southeast-2"
+}
+
+variable "ecr_repo_name" {
+  default = "my-devops-app"
+}
+
+variable "ssh_public_key" {
+  description = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDjFcIhC1IKCveBEBMNYMsioE77zWEC/NWFwMSsJJtK6xyUPFFRD+fft2x7JeJt4OuKnao0hUw6B3xUb9kZWaQKzPtIIEJsxS9iQ2WtHwUB124PyvWjZPahC+njkWIqU0+M8iyh7eunkcFshoXTwtEPGu+btTJx+FHL75SjY/BJWiZEIaMIjOc6cZF46eVEX8Fo4uoHt0oyXKELuJW/4D92n6NkpmQZ8e5kC4RCPYmA5g/3u8rkGpvVx+DjYVn+JLZbWTECojq0MAyPaltRg/KA5laMFTB3fIb66yar3PT4GPq+i7rWz5hxTL9edaaa0rdYQs6gZbNCh8uO7JVE9HwpOthWVfbTYescbnox8f8vAv3nqus4k/msriiuKubrBId+U43oTsXoj6uChNZ1yRz5PEDbR1ZsvXvKsNRNC6CrX9LJw8TA5wQYW9cYHE9XhysCFxt1c8G0ul7eCg5tQwuXyR6oX0nv8G1BDh5L+ND/Y63GezPB1CXMAtULkIxAOUQyPOfKLa5OlU+s3ibLSuwc+IfYPmnaZAtZ6KTdHYfRWH+W0oba0i6q2PJDtgGD18uWih27Olj/ispqZiJp4XZGQ5FxuP+lm4G2aKfQlGpcUUn4UfeOtOV4QfiOuLemzGLq5bGzciIyY5p4FAY50HB/jI1BwKekHEIJJSu1Xw3SNw== devops-project"
+  type   = string
+}
