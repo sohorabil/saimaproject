@@ -47,7 +47,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 22
           script: |
             echo "🚀 Starting deployment..."
