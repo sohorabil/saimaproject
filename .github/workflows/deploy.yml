@@ -41,6 +41,9 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
 
+    # ←←← THIS IS THE IMPORTANT FIX
+    secrets: inherit
+
     steps:
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -49,22 +52,27 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 22
+          timeout: 60s
+          command_timeout: 10m
           script: |
-            echo "🚀 Starting deployment..."
+            echo "🚀 Starting deployment on $(date)..."
 
             IMAGE=747549198981.dkr.ecr.ap-southeast-2.amazonaws.com/my-devops-app:${{ needs.build-and-push.outputs.image_tag }}
 
             # Login to ECR
-            aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 747549198981.dkr.ecr.ap-southeast-2.amazonaws.com
+            aws ecr get-login-password --region ap-southeast-2 | \
+              docker login --username AWS --password-stdin 747549198981.dkr.ecr.ap-southeast-2.amazonaws.com
 
             # Stop & remove old container
             docker stop myapp || true
             docker rm myapp || true
 
-            # Run new container
+            # Pull and run new container (added pull for safety)
+            docker pull $IMAGE
+
             docker run -d \
               --name myapp \
               -p 3005:3005 \
               $IMAGE
 
-            echo "✅ Deployment complete!"
+            echo "✅ Deployment complete! Visit http://${{ secrets.EC2_HOST }}:3005"
