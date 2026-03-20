@@ -58,6 +58,21 @@ resource "aws_security_group" "app_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+    ingress {
+    from_port   = 3005
+    to_port     = 3005
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+
   ingress {
     from_port   = 80
     to_port     = 80
@@ -76,7 +91,7 @@ resource "aws_security_group" "app_sg" {
 # ====================== Key Pair (Fixed format) ======================
 resource "aws_key_pair" "deployer" {
   key_name   = "devops-project-key"
-  public_key = trimspace(file("~/.ssh/aws-devops.pub"))
+  public_key = trimspace(file("/home/saima/.ssh/github-actions-key.pub"))
 }
 
 # ====================== EC2 Instance ======================
