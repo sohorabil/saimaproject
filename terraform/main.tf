@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "ap-southeast-2"   # ← your region
+  region = "us-east-1"   # ← your region
 }
 
 # ====================== Create Default VPC (Fixes VPC error) ======================
@@ -91,7 +91,7 @@ resource "aws_security_group" "app_sg" {
 # ====================== Key Pair (Fixed format) ======================
 resource "aws_key_pair" "deployer" {
   key_name   = "devops-project-key"
-  public_key = trimspace(file("/home/saima/.ssh/github-actions-key.pub"))
+  public_key = trimspace(file("~/.ssh/github-actions-ec2.pub"))
 }
 
 # ====================== EC2 Instance ======================
@@ -108,7 +108,7 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "app_server" {
   ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t2.micro"
+  instance_type          = "t3.micro"
   key_name               = aws_key_pair.deployer.key_name
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
   vpc_security_group_ids = [aws_security_group.app_sg.id]   # Fixed
