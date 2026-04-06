@@ -7,9 +7,9 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
     outputs:
       image_tag: ${{ steps.build.outputs.image_tag }}
+      registry: ${{ steps.login-ecr.outputs.registry }}
 
     steps:
       - name: Checkout code
@@ -40,10 +40,9 @@ jobs:
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
-
     steps:
       - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@v1.2.5          # Updated to newer version
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
@@ -51,23 +50,24 @@ jobs:
           port: 22
           timeout: 60s
           command_timeout: 10m
-          debug: false                              # Change to true only if debugging
+          debug: true   # ← Enable debug for now to see logs clearly
           script: |
             echo "🚀 Starting deployment on $(date)..."
 
-            IMAGE=747549198981.dkr.ecr.us-east-1.amazonaws.com/my-devops-app:${{ needs.build-and-push.outputs.image_tag }}
+            # Use correct registry and image
+            IMAGE=${{ needs.build-and-push.outputs.registry }}/my-devops-app:${{ needs.build-and-push.outputs.image_tag }}
 
             echo "📦 Logging into Amazon ECR..."
-            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 123153903243.dkr.ecr.us-east-1.amazonaws.com
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ needs.build-and-push.outputs.registry }}
 
             echo "🛑 Stopping and removing old container..."
             docker stop myapp || true
             docker rm myapp || true
 
-            echo "📥 Pulling new image..."
+            echo "📥 Pulling new image: $IMAGE"
             docker pull $IMAGE
 
-            echo "🚀 Starting new container..."
+            echo "🚀 Starting new container on port 4000..."
             docker run -d \
               --name myapp \
               -p 4000:4000 \
