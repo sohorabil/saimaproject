@@ -70,8 +70,8 @@ jobs:
             echo "🚀 Starting new container..."
             docker run -d \
               --name myapp \
-              -p 3005:3005 \
+              -p 4000:4000 \
               $IMAGE
 
             echo "✅ Deployment completed successfully!"
-            echo "🌐 App is running at: http://${{ secrets.EC2_HOST }}:3005"
+            echo "🌐 App is running at: http://${{ secrets.EC2_HOST }}:4000"
